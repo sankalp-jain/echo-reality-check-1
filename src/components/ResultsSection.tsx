@@ -1,7 +1,6 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CircleCheck, CircleX, ChartLine, Waveform, ChartBar } from "lucide-react";
+import { CircleCheck, CircleX, ChartLine, AudioWaveform, ChartBar } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DetectionResult } from "@/types/DetectionResult";
 
@@ -97,7 +96,7 @@ export function ResultsSection({ result, isLoading }: ResultsSectionProps) {
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                   <TabsList className="grid grid-cols-3 w-full mb-4">
                     <TabsTrigger value="waveform">
-                      <Waveform className="w-4 h-4 mr-1" /> Waveform
+                      <AudioWaveform className="w-4 h-4 mr-1" /> Waveform
                     </TabsTrigger>
                     <TabsTrigger value="spectrogram">
                       <ChartLine className="w-4 h-4 mr-1" /> Spectrogram
@@ -106,6 +105,7 @@ export function ResultsSection({ result, isLoading }: ResultsSectionProps) {
                       <ChartBar className="w-4 h-4 mr-1" /> Features
                     </TabsTrigger>
                   </TabsList>
+                  
                   <TabsContent value="waveform" className="h-64 border rounded-md p-4">
                     <div className="h-full flex items-center justify-center">
                       <div className="w-full h-32 relative">
