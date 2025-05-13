@@ -19,14 +19,10 @@ export function HeroSection({ onRunTest }: HeroSectionProps) {
       >
         Run and Test
       </Button>
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
         <div className="bg-secondary/50 p-6 rounded-lg">
           <h3 className="font-semibold text-lg mb-2">Advanced Analysis</h3>
           <p className="text-muted-foreground">Our AI-powered system analyzes multiple audio features to detect synthetic voices.</p>
-        </div>
-        <div className="bg-secondary/50 p-6 rounded-lg">
-          <h3 className="font-semibold text-lg mb-2">Visual Results</h3>
-          <p className="text-muted-foreground">View detailed visualizations of audio patterns to understand detection results.</p>
         </div>
         <div className="bg-secondary/50 p-6 rounded-lg">
           <h3 className="font-semibold text-lg mb-2">Instant Detection</h3>

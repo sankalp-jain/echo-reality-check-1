@@ -52,6 +52,11 @@ const Index = () => {
       {/* Hero Section */}
       <HeroSection onRunTest={scrollToSamples} />
       
+      {/* Results Section - moved to before audio samples */}
+      <div ref={resultsRef} className="mt-16 pt-8">
+        <ResultsSection result={currentResult} isLoading={isLoading} />
+      </div>
+      
       {/* Audio Samples Section */}
       <div ref={audioSamplesRef} className="mt-16 pt-8">
         <h2 className="text-3xl font-bold mb-6 text-center">Audio Samples</h2>
@@ -71,11 +76,6 @@ const Index = () => {
             />
           ))}
         </div>
-      </div>
-      
-      {/* Results Section */}
-      <div ref={resultsRef}>
-        <ResultsSection result={currentResult} isLoading={isLoading} />
       </div>
       
       {/* Footer */}
