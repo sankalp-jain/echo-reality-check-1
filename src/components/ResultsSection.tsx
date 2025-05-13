@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleCheck, CircleX, ChartLine, AudioWaveform, ChartBar } from "lucide-react";
@@ -92,7 +93,7 @@ export function ResultsSection({ result, isLoading }: ResultsSectionProps) {
               </div>
               
               <div>
-                <h3 className="font-semibold mb-4">Visual Representation:</h3>
+                <h3 className="font-semibold mb-4">Visual Analysis:</h3>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                   <TabsList className="grid grid-cols-3 w-full mb-4">
                     <TabsTrigger value="waveform">
@@ -142,7 +143,7 @@ export function ResultsSection({ result, isLoading }: ResultsSectionProps) {
                                   key={`${x}-${y}`} 
                                   className="w-[2.5%] h-full" 
                                   style={{ 
-                                    background: `rgba(0, 123, 255, ${intensity})`,
+                                    background: `rgba(var(--primary-rgb), ${intensity})`,
                                   }}
                                 />
                               );

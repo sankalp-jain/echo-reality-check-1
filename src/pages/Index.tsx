@@ -11,6 +11,7 @@ const Index = () => {
   const [currentResult, setCurrentResult] = useState<DetectionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const audioSamplesRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   // Function to scroll to audio samples
   const scrollToSamples = () => {
@@ -23,6 +24,11 @@ const Index = () => {
   const handleTestSample = async (sampleId: string) => {
     setIsLoading(true);
     setCurrentResult(null);
+    
+    // Scroll to results section
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     
     try {
       const result = await getDetectionResult(sampleId);
@@ -68,7 +74,9 @@ const Index = () => {
       </div>
       
       {/* Results Section */}
-      <ResultsSection result={currentResult} isLoading={isLoading} />
+      <div ref={resultsRef}>
+        <ResultsSection result={currentResult} isLoading={isLoading} />
+      </div>
       
       {/* Footer */}
       <div className="mt-16 text-center text-sm text-muted-foreground">
