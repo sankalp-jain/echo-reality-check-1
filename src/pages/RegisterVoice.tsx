@@ -68,10 +68,10 @@ const RegisterVoice = () => {
       {/* Upload Section */}
       <div ref={uploadSectionRef} className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-          Submit your voice to protect against deepfakes
+          Register your voice with our platform
         </h1>
         <p className="text-lg text-muted-foreground mb-8">
-          Upload your voice clip to create a unique, verifiable identity
+          Upload your voice to verify against deepfakes, and get legal usage rights
         </p>
 
         <div className="max-w-md mx-auto">

@@ -144,8 +144,7 @@ const CloneVoice = () => {
       </div>
 
       {/* Upload Script Section */}
-      {selectedVoice && (
-        <div ref={scriptSectionRef} className="mb-12 pt-8">
+      <div ref={scriptSectionRef} className="mb-12 pt-8">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">Upload or paste your script</h2>
             <p className="text-lg text-muted-foreground">
@@ -199,7 +198,6 @@ const CloneVoice = () => {
             </Button>
           </div>
         </div>
-      )}
 
       {/* Loading Animation */}
       {isGenerating && (
