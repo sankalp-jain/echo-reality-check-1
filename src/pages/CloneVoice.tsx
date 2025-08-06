@@ -9,31 +9,31 @@ import { Play, Upload, Download, Mic, Pause } from "lucide-react";
 
 const famousVoices = [
   {
-    id: "amit_shah_clone",
+    id: "amit_shah_clone.mp3",
     name: "Amit Shah",
     type: "Politician",
     imageUrl: "/politician/Amit-Shah.jpg"
   },
   {
-    id: "ml_khattar_clone", 
+    id: "ml_khattar_clone.mp3", 
     name: "ML Khattar",
     type: "Politician",
     imageUrl: "/politician/MLKhattar.jpg"
   },
   {
-    id: "narendra_modi_clone",
+    id: "narendra_modi_clone.mp3",
     name: "Narendra Modi", 
     type: "Politician",
     imageUrl: "/politician/NaMo.jpeg"
   },
   {
-    id: "nayab_singh_saini_clone",
+    id: "nayab_singh_saini_clone.mp3",
     name: "Nayab Singh Saini",
     type: "Politician", 
     imageUrl: "/politician/Nayab_Singh_Saini_2023.jpg"
   },
   {
-    id: "aditya_nath_yogi_clone",
+    id: "aditya_nath_yogi_clone.mp3",
     name: "Aditya Nath Yogi",
     type: "Politician",
     imageUrl: "/politician/yogi.jpeg"
@@ -47,12 +47,15 @@ const CloneVoice = () => {
   const [generatedAudio, setGeneratedAudio] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [uploadedVoice, setUploadedVoice] = useState<File | null>(null);
+  const [uploadResponse, setUploadResponse] = useState<any>(null);
+  const [cloneResponse, setCloneResponse] = useState<any>(null);
   const [isUploadingVoice, setIsUploadingVoice] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
   
   const scriptSectionRef = useRef<HTMLDivElement>(null);
   const outputSectionRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Handle voice selection
   const handleVoiceSelect = (voiceId: string) => {
@@ -64,20 +67,53 @@ const CloneVoice = () => {
   };
 
   // Handle voice file upload
-  const handleVoiceUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVoiceUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setIsUploadingVoice(true);
       setUploadedVoice(file);
       
-      // Simulate upload delay
-      setTimeout(() => {
-        setIsUploadingVoice(false);
+      try {
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Call the backend API
+        const response = await fetch('http://localhost:8000/upload-clone-audio', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        console.log('Upload successful:', result);
+        
+        // Validate the response
+        if (result.error) {
+          throw new Error(result.error);
+        }
+        
+        if (!result.filename) {
+          throw new Error('No filename received from server');
+        }
+        
+        // Store the upload response
+        setUploadResponse(result);
+        
         // Scroll to script section
         if (scriptSectionRef.current) {
           scriptSectionRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 2000);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Failed to upload file. Please try again.';
+        alert(`Upload failed: ${errorMessage}`);
+      } finally {
+        setIsUploadingVoice(false);
+      }
     }
   };
 
@@ -93,22 +129,90 @@ const CloneVoice = () => {
     }
   };
 
+  // Handle audio playback
+  const handleAudioPlay = () => {
+    if (!generatedAudio) return;
+    
+    if (isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    } else {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(generatedAudio);
+        audioRef.current.onended = () => setIsPlaying(false);
+      }
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  // Handle audio download
+  const handleAudioDownload = () => {
+    if (!generatedAudio || !cloneResponse?.output_filename) return;
+    
+    const link = document.createElement('a');
+    link.href = generatedAudio;
+    link.download = cloneResponse.output_filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Handle form submission
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if ((!selectedVoice && !uploadedVoice) || !script.trim()) return;
     
     setIsGenerating(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setGeneratedAudio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
-      setIsGenerating(false);
+    try {
+      // Determine the sample_id based on selection or upload
+      let sampleId: string;
+      if (selectedVoice) {
+        // For preset voices, use the voice ID as sample_id
+        sampleId = selectedVoice;
+      } else if (uploadedVoice && uploadResponse) {
+        // For uploaded voice, use the filename from backend response
+        sampleId = uploadResponse.filename;
+      } else {
+        throw new Error('No voice selected or uploaded');
+      }
+      
+      // Call the clone-voice API
+      const response = await fetch(`http://localhost:8000/clone-voice?sample_id=${encodeURIComponent(sampleId)}&text=${encodeURIComponent(script)}`);
+      
+      if (!response.ok) {
+        throw new Error(`Clone failed: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      console.log('Clone successful:', result);
+      
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      
+      if (!result.output_filename) {
+        throw new Error('No output filename received from server');
+      }
+      
+      // Store the clone response
+      setCloneResponse(result);
+      
+      // Set the generated audio URL for playback
+      const audioUrl = `https://cleancommit-voice-clone.hf.space/clone/${result.output_filename}`;
+      setGeneratedAudio(audioUrl);
       
       // Scroll to output section
       if (outputSectionRef.current) {
         outputSectionRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 3000);
+    } catch (error) {
+      console.error('Error cloning voice:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to clone voice. Please try again.';
+      alert(`Clone failed: ${errorMessage}`);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -171,10 +275,19 @@ const CloneVoice = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-medium text-lg">Uploaded Voice</h3>
-                <p className="text-muted-foreground">{uploadedVoice.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  Size: {(uploadedVoice.size / 1024 / 1024).toFixed(2)} MB
+                <p className="text-muted-foreground">
+                  {uploadResponse?.filename || uploadedVoice.name}
                 </p>
+                <p className="text-sm text-muted-foreground">
+                  Size: {uploadResponse?.file_size ? 
+                    (uploadResponse.file_size / 1024 / 1024).toFixed(2) : 
+                    (uploadedVoice.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+                {uploadResponse?.file_path && (
+                  <p className="text-xs text-muted-foreground">
+                    Path: {uploadResponse.file_path}
+                  </p>
+                )}
               </div>
               <div className="text-green-600 font-medium">
                 ✓ Ready to use
@@ -303,15 +416,25 @@ const CloneVoice = () => {
                   <Button
                     variant="outline"
                     size="lg"
-                    onClick={() => setIsPlaying(!isPlaying)}
+                    onClick={handleAudioPlay}
                     className="w-16 h-16 rounded-full"
                   >
                     {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
                   </Button>
                   <p className="mt-4 text-sm text-muted-foreground">Generated Voice</p>
+                  {cloneResponse?.output_filename && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      File: {cloneResponse.output_filename}
+                    </p>
+                  )}
                 </div>
                 
-                <Button className="w-full" variant="default">
+                <Button 
+                  className="w-full" 
+                  variant="default"
+                  onClick={handleAudioDownload}
+                  disabled={!generatedAudio}
+                >
                   <Download className="w-4 h-4 mr-2" />
                   Download Audio
                 </Button>
