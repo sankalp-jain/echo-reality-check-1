@@ -79,7 +79,7 @@ const CloneVoice = () => {
         formData.append('file', file);
         
         // Call the backend API
-        const response = await fetch('http://localhost:8000/upload-clone-audio', {
+        const response = await fetch('https://cleancommit-voice-clone.hf.space/upload-clone-audio', {
           method: 'POST',
           body: formData,
         });
@@ -178,7 +178,7 @@ const CloneVoice = () => {
       }
       
       // Call the clone-voice API
-      const response = await fetch(`http://localhost:8000/clone-voice?sample_id=${encodeURIComponent(sampleId)}&text=${encodeURIComponent(script)}`);
+      const response = await fetch(`https://cleancommit-voice-clone.hf.space/clone-voice?sample_id=${encodeURIComponent(sampleId)}&text=${encodeURIComponent(script)}`);
       
       if (!response.ok) {
         throw new Error(`Clone failed: ${response.statusText}`);
