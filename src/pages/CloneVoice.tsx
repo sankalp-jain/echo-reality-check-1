@@ -21,19 +21,19 @@ const famousVoices = [
     imageUrl: "/politician/MLKhattar.jpg"
   },
   {
-    id: "narendra_modi_clone.mp3",
+    id: "namo_1.mp3",
     name: "Narendra Modi", 
     type: "Politician",
     imageUrl: "/politician/NaMo.jpeg"
   },
   {
-    id: "nayab_singh_saini_clone.mp3",
+    id: "nayab_saini_clone.mp3",
     name: "Nayab Singh Saini",
     type: "Politician", 
     imageUrl: "/politician/Nayab_Singh_Saini_2023.jpg"
   },
   {
-    id: "aditya_nath_yogi_clone.mp3",
+    id: "yogi_clone.mp3",
     name: "Aditya Nath Yogi",
     type: "Politician",
     imageUrl: "/politician/yogi.jpeg"
