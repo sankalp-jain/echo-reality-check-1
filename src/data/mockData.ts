@@ -6,121 +6,115 @@ import { DetectionResult } from "@/types/DetectionResult";
 export const celebrities: Celebrity[] = [
   {
     id: "cel1",
-    name: "Emma Johnson",
-    imageUrl: "https://source.unsplash.com/random/100x100/?woman"
+    name: "Donald Trump",
+    imageUrl: "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTu-GSY_bXjggu92Go8I0Od4bEoIE-RnSuaCRmN5xcL4lfSDQI169Wyg5hK0VegSLUJjpqlG47veDZ33C0"
   },
   {
     id: "cel2",
-    name: "Michael Chen",
-    imageUrl: "https://source.unsplash.com/random/100x100/?man"
+    name: "Elon Musk",
+    imageUrl: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcReXPFAJ5cUhfTLDRA7ZJlBZdwOmO7AfLRhazE1rl5-nJhk0NHeTtwX983IoqiSjrPB-R4OiIN_uaPO9jqW41E2Ww"
   },
   {
     id: "cel3",
-    name: "Sofia Rodriguez",
-    imageUrl: "https://source.unsplash.com/random/100x100/?actress"
+    name: "Narendra Modi",
+    imageUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTKqIg3pZGnGVuDbO7piYwe2EBzDMOcMohDv5sIWQ-tnD7ruRla"
   },
   {
     id: "cel4",
-    name: "David Williams",
-    imageUrl: "https://source.unsplash.com/random/100x100/?actor"
+    name: "Morgan Freeman",
+    imageUrl: "https://m.media-amazon.com/images/M/MV5BMTc0MDMyMzI2OF5BMl5BanBnXkFtZTcwMzM2OTk1MQ@@._V1_.jpg"
   },
   {
     id: "cel5",
-    name: "Olivia Garcia",
-    imageUrl: "https://source.unsplash.com/random/100x100/?singer"
+    name: "MrBeast",
+    imageUrl: "https://cdn.prod.website-files.com/63b9c43cf803b0331540fa68/66bf7f0ebfa3fe2764910428_MrBeast.png"
   }
 ];
 
 // Mock audio samples
 export const audioSamples = [
   {
-    id: "sample1",
+    id: "DonaldTrump.mp3",
     name: "Sample 1 - Original",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3",
-    celebrityId: "cel1"
+    audioUrl: "https://lambent-boba-d01ddd.netlify.app/DonaldTrump.mp3",
+    celebrityId: "cel1",
   },
   {
-    id: "sample2",
+    id: "DonaldTrump1.mp3",
     name: "Sample 1 - Fake A",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/956/956-preview.mp3",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/DonaldTrump1.mp3",
     celebrityId: "cel1"
   },
   {
-    id: "sample3",
+    id: "DonaldTrump2.wav",
     name: "Sample 1 - Fake B",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/DonaldTrump2.wav",
     celebrityId: "cel1"
   },
   {
-    id: "sample4",
+    id: "Elon Musk Works 120 Hours Every Week.mp3",
     name: "Sample 2 - Original",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/2/2-preview.mp3",
+    audioUrl: "https://lambent-boba-d01ddd.netlify.app/Elon Musk Works 120 Hours Every Week.mp3",
     celebrityId: "cel2"
   },
   {
-    id: "sample5",
-    name: "Sample 2 - Fake",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3",
+    id: "ElonMusk1.mp3",
+    name: "Sample 2 - Fake A",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/ElonMusk1.mp3",
     celebrityId: "cel2"
   },
   {
-    id: "sample6",
+    id: "ModiVoice.mp3",
     name: "Sample 3 - Original A",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3",
+    audioUrl: "https://lambent-boba-d01ddd.netlify.app/ModiVoice.mp3",
     celebrityId: "cel3"
   },
   {
-    id: "sample7",
-    name: "Sample 3 - Original B",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/931/931-preview.mp3",
+    id: "Modi1.mp3",
+    name: "Sample 3 - Fake A",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/Modi1.mp3",
     celebrityId: "cel3"
   },
   {
-    id: "sample8",
-    name: "Sample 3 - Fake",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/240/240-preview.mp3",
+    id: "Modi2.wav",
+    name: "Sample 3 - Fake B",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/Modi2.wav",
     celebrityId: "cel3"
   },
   {
-    id: "sample9",
+    id: "MorganFreeman.mp3",
     name: "Sample 4 - Original",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3",
+    audioUrl: "https://lambent-boba-d01ddd.netlify.app/MorganFreeman.mp3",
     celebrityId: "cel4"
   },
   {
-    id: "sample10",
+    id: "MorganFreeMan1.mp3",
     name: "Sample 4 - Fake A",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/981/981-preview.mp3",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/MorganFreeman1.mp3",
     celebrityId: "cel4"
   },
   {
-    id: "sample11",
+    id: "MorganFreeMan2.wav",
     name: "Sample 4 - Fake B",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/770/770-preview.mp3",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/MorganFreeman2.wav",
     celebrityId: "cel4"
   },
   {
-    id: "sample12",
+    id: "MrBeast.mp3",
     name: "Sample 5 - Original A",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/618/618-preview.mp3",
+    audioUrl: "https://lambent-boba-d01ddd.netlify.app/MrBeast.mp3",
     celebrityId: "cel5"
   },
   {
-    id: "sample13",
-    name: "Sample 5 - Original B",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/1026/1026-preview.mp3",
-    celebrityId: "cel5"
-  },
-  {
-    id: "sample14",
+    id: "MrBeast1.mp3",
     name: "Sample 5 - Fake A",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/978/978-preview.mp3",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/MrBeast1.mp3",
     celebrityId: "cel5"
   },
   {
-    id: "sample15",
+    id: "MrBeast2.wav",
     name: "Sample 5 - Fake B",
-    audioUrl: "https://assets.mixkit.co/active_storage/sfx/1031/1031-preview.mp3",
+    audioUrl: "https://rainbow-banoffee-f4b78a.netlify.app/MrBeast2.wav",
     celebrityId: "cel5"
   }
 ];
@@ -304,11 +298,12 @@ export const mockResults: Record<string, DetectionResult> = {
   }
 };
 
-// Function to simulate API call
+
+// Function to simulate API call and fetch actual data
 export const getDetectionResult = (sampleId: string): Promise<DetectionResult> => {
   return new Promise((resolve, reject) => {
     // Assuming the backend API is hosted at 'http://localhost:8000/explain' or another endpoint
-    fetch(`https://cleancommit-voice-clone.hf.space/explain?audio_path=${sampleId}`)
+    fetch(`https://voice-detection-aed2fneyabetenc6.canadacentral-01.azurewebsites.net/explain?audio_path=${sampleId}`)
       .then((response) => {
         if (!response.ok) {
           // Handle HTTP errors
