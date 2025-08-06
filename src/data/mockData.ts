@@ -306,51 +306,28 @@ export const mockResults: Record<string, DetectionResult> = {
 
 // Function to simulate API call
 export const getDetectionResult = (sampleId: string): Promise<DetectionResult> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // If we have a mock result, return it, otherwise return a randomized result
-      if (mockResults[sampleId]) {
-        resolve(mockResults[sampleId]);
-      } else {
-        // Generate random result for samples without predefined results
-        const isFake = Math.random() > 0.5;
-        
-        if (isFake) {
-          resolve({
-            id: sampleId,
-            prediction: "fake",
-            explanation: "This voice contains synthetic patterns typically found in AI-generated audio.",
-            anomalies: [
-              {
-                feature: "Spectral Centroid",
-                description: "Average frequency of the sound spectrum",
-                magnitude: Math.floor(Math.random() * 20) + 5
-              },
-              {
-                feature: "MFCC Variance",
-                description: "Consistency in vocal tract characteristics",
-                magnitude: -Math.floor(Math.random() * 15) - 5
-              },
-              {
-                feature: "Harmonic Ratio",
-                description: "Balance of harmonic to noise components",
-                magnitude: Math.floor(Math.random() * 18) + 8
-              },
-              {
-                feature: "Spectral Flux",
-                description: "Rate of change of power spectrum",
-                magnitude: -Math.floor(Math.random() * 12) - 6
-              }
-            ]
-          });
-        } else {
-          resolve({
-            id: sampleId,
-            prediction: "original",
-            anomalies: []
-          });
+  return new Promise((resolve, reject) => {
+    // Assuming the backend API is hosted at 'http://localhost:8000/explain' or another endpoint
+    fetch(`https://cleancommit-voice-clone.hf.space/explain?audio_path=${sampleId}`)
+      .then((response) => {
+        if (!response.ok) {
+          // Handle HTTP errors
+          reject(`Error fetching data: ${response.statusText}`);
         }
-      }
-    }, 1500); // Simulate API delay
+        return response.json();
+      })
+      .then((data) => {
+        // Assuming the data structure returned is in the format expected for DetectionResult
+        resolve({
+          id: data.id,
+          prediction: data.prediction,
+          explanation: data.explanation,
+          anomalies: data.anomalies || []
+        });
+      })
+      .catch((error) => {
+        // Handle network or parsing errors
+        reject(`Failed to fetch detection result: ${error}`);
+      });
   });
 };
