@@ -303,7 +303,7 @@ export const mockResults: Record<string, DetectionResult> = {
 export const getDetectionResult = (sampleId: string): Promise<DetectionResult> => {
   return new Promise((resolve, reject) => {
     // Assuming the backend API is hosted at 'http://localhost:8000/explain' or another endpoint
-    fetch(`https://voice-detection-aed2fneyabetenc6.canadacentral-01.azurewebsites.net/explain?audio_path=${sampleId}`)
+    fetch(`https://cleancommit-voice-clone.hf.space/explain?audio_path=${sampleId}`)
       .then((response) => {
         if (!response.ok) {
           // Handle HTTP errors
