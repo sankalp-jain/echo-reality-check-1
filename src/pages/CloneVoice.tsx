@@ -148,10 +148,13 @@ const CloneVoice = () => {
 
   // Handle audio download
   const handleAudioDownload = () => {
-    if (!generatedAudio || !cloneResponse?.output_filename) return;
+    if (!cloneResponse?.output_filename) return;
+    
+    // Use the play-audio endpoint for download as well
+    const downloadUrl = `https://cleancommit-voice-clone.hf.space/play-audio/${cloneResponse.output_filename}`;
     
     const link = document.createElement('a');
-    link.href = generatedAudio;
+    link.href = downloadUrl;
     link.download = cloneResponse.output_filename;
     document.body.appendChild(link);
     link.click();
@@ -198,8 +201,8 @@ const CloneVoice = () => {
       // Store the clone response
       setCloneResponse(result);
       
-      // Set the generated audio URL for playback
-      const audioUrl = `https://cleancommit-voice-clone.hf.space/clone/${result.output_filename}`;
+      // Set the generated audio URL for playback using the play-audio endpoint
+      const audioUrl = `https://cleancommit-voice-clone.hf.space/play-audio/${result.output_filename}`;
       setGeneratedAudio(audioUrl);
       
       // Scroll to output section
