@@ -9,7 +9,7 @@ import { Play, Upload, Download, Mic, Pause } from "lucide-react";
 
 const famousVoices = [
   {
-    id: "amit_shah_clone.mp3",
+    id: "amit_shah_clone_1.mp3",
     name: "Amit Shah",
     type: "Politician",
     imageUrl: "/politician/Amit-Shah.jpg"
