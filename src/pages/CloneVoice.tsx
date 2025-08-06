@@ -9,40 +9,34 @@ import { Play, Upload, Download, Mic, Pause } from "lucide-react";
 
 const famousVoices = [
   {
-    id: "1",
-    name: "Morgan Freeman",
-    type: "Actor",
-    imageUrl: "/placeholder.svg"
+    id: "amit_shah_clone",
+    name: "Amit Shah",
+    type: "Politician",
+    imageUrl: "/public/politician/amit-shah.jpg"
   },
   {
-    id: "2", 
-    name: "David Attenborough",
-    type: "Narrator",
-    imageUrl: "/placeholder.svg"
+    id: "ml_khattar_clone", 
+    name: "ML Khattar",
+    type: "Politician",
+    imageUrl: "/public/politician/MLKhattar.jpg"
   },
   {
-    id: "3",
-    name: "Oprah Winfrey", 
-    type: "Media Personality",
-    imageUrl: "/placeholder.svg"
+    id: "narendra_modi_clone",
+    name: "Narendra Modi", 
+    type: "Politician",
+    imageUrl: "/public/politician/NaMo.jpeg"
   },
   {
-    id: "4",
-    name: "Samuel L. Jackson",
-    type: "Actor", 
-    imageUrl: "/placeholder.svg"
+    id: "nayab_singh_saini_clone",
+    name: "Nayab Singh Saini",
+    type: "Politician", 
+    imageUrl: "/public/politician/Nayab_Singh_Saini_2023.jpg"
   },
   {
-    id: "5",
-    name: "Joe Rogan",
-    type: "Podcaster",
-    imageUrl: "/placeholder.svg"
-  },
-  {
-    id: "6",
-    name: "Neil deGrasse Tyson",
-    type: "Scientist",
-    imageUrl: "/placeholder.svg"
+    id: "aditya_nath_yogi_clone",
+    name: "Aditya Nath Yogi",
+    type: "Politician",
+    imageUrl: "/public/politician/yogi.jpeg"
   }
 ];
 
