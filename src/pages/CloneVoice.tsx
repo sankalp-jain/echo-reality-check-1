@@ -1,12 +1,11 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Upload, Download, Play, Pause } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { Play, Upload, Download, Mic, Pause } from "lucide-react";
 
 const famousVoices = [
   {
@@ -48,21 +47,47 @@ const famousVoices = [
 ];
 
 const CloneVoice = () => {
-  const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
+  const [selectedVoice, setSelectedVoice] = useState<string>("");
   const [script, setScript] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedAudio, setGeneratedAudio] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [uploadedVoice, setUploadedVoice] = useState<File | null>(null);
+  const [isUploadingVoice, setIsUploadingVoice] = useState(false);
+  const [showPresets, setShowPresets] = useState(false);
+  
   const scriptSectionRef = useRef<HTMLDivElement>(null);
   const outputSectionRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Handle voice selection
   const handleVoiceSelect = (voiceId: string) => {
     setSelectedVoice(voiceId);
-    setTimeout(() => {
-      scriptSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+    // Scroll to script section
+    if (scriptSectionRef.current) {
+      scriptSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
+  // Handle voice file upload
+  const handleVoiceUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setIsUploadingVoice(true);
+      setUploadedVoice(file);
+      
+      // Simulate upload delay
+      setTimeout(() => {
+        setIsUploadingVoice(false);
+        // Scroll to script section
+        if (scriptSectionRef.current) {
+          scriptSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 2000);
+    }
+  };
+
+  // Handle file upload for script
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -71,133 +96,192 @@ const CloneVoice = () => {
         setScript(e.target?.result as string);
       };
       reader.readAsText(file);
-      toast({
-        title: "File uploaded successfully",
-        description: `${file.name} has been loaded.`,
-      });
     }
   };
 
-  const handleSubmit = async () => {
-    if (!script.trim() || !selectedVoice) {
-      toast({
-        title: "Missing information",
-        description: "Please select a voice and provide a script.",
-        variant: "destructive"
-      });
-      return;
-    }
-
+  // Handle form submission
+  const handleSubmit = () => {
+    if ((!selectedVoice && !uploadedVoice) || !script.trim()) return;
+    
     setIsGenerating(true);
     
-    // Simulate processing time
+    // Simulate API call
     setTimeout(() => {
-      setGeneratedAudio("/placeholder.svg"); // Mock audio URL
+      setGeneratedAudio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
       setIsGenerating(false);
-      outputSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-      toast({
-        title: "Voice generated successfully!",
-        description: "Your cloned voice is ready to play.",
-      });
+      
+      // Scroll to output section
+      if (outputSectionRef.current) {
+        outputSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
     }, 3000);
   };
 
-  const selectedVoiceData = famousVoices.find(v => v.id === selectedVoice);
-
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Voice Selection Section */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-          Choose the voice you want to clone
+      {/* Hero Section */}
+      <div className="text-center max-w-3xl mx-auto mb-12">
+        <h1 className="text-4xl font-bold mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+          Voice Cloning Studio
         </h1>
         <p className="text-lg text-muted-foreground mb-8">
-          Pick from iconic voices you love. Tap to preview and proceed.
+          Create amazing voice clones with our advanced AI technology.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {famousVoices.map((voice) => (
-            <Card 
-              key={voice.id} 
-              className={`cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-                selectedVoice === voice.id ? 'ring-2 ring-primary shadow-lg' : ''
-              }`}
-              onClick={() => handleVoiceSelect(voice.id)}
-            >
-              <CardContent className="p-6 text-center">
-                <Avatar className="w-20 h-20 mx-auto mb-4">
-                  <AvatarImage src={voice.imageUrl} alt={voice.name} />
-                  <AvatarFallback>{voice.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                </Avatar>
-                <h3 className="font-semibold text-lg mb-2">{voice.name}</h3>
-                <Badge variant="secondary" className="mb-4">{voice.type}</Badge>
-                <Button 
-                  variant={selectedVoice === voice.id ? "default" : "outline"}
-                  className="w-full"
-                >
-                  {selectedVoice === voice.id ? "Selected" : "Select"}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Primary Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <Button 
+            size="lg" 
+            className="text-lg px-8 py-6 flex-1 max-w-xs"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload className="w-5 h-5 mr-2" />
+            Upload a Voice
+          </Button>
+          
+          <Button 
+            size="lg" 
+            variant="outline"
+            className="text-lg px-8 py-6 flex-1 max-w-xs"
+            onClick={() => setShowPresets(true)}
+          >
+            <Mic className="w-5 h-5 mr-2" />
+            Use Preset
+          </Button>
         </div>
+
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".wav,.mp3,.m4a,.ogg"
+          onChange={handleVoiceUpload}
+          className="hidden"
+        />
       </div>
+
+      {/* Upload Status */}
+      {isUploadingVoice && (
+        <Card className="mb-8">
+          <CardContent className="p-6 text-center">
+            <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-lg font-medium">Uploading your voice file...</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Uploaded Voice Info */}
+      {uploadedVoice && !isUploadingVoice && (
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-lg">Uploaded Voice</h3>
+                <p className="text-muted-foreground">{uploadedVoice.name}</p>
+                <p className="text-sm text-muted-foreground">
+                  Size: {(uploadedVoice.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+              </div>
+              <div className="text-green-600 font-medium">
+                ✓ Ready to use
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Famous Voices Grid */}
+      {showPresets && (
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold mb-6 text-center">Choose the voice you want to clone</h2>
+          <p className="text-center text-muted-foreground mb-8">
+            Pick from iconic voices you love. Tap to preview and proceed.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {famousVoices.map((voice) => (
+              <Card 
+                key={voice.id} 
+                className={`cursor-pointer transition-all hover:shadow-lg ${
+                  selectedVoice === voice.id ? 'ring-2 ring-primary' : ''
+                }`}
+                onClick={() => handleVoiceSelect(voice.id)}
+              >
+                <CardContent className="p-6 text-center">
+                  <Avatar className="w-20 h-20 mx-auto mb-4">
+                    <AvatarImage src={voice.imageUrl} alt={voice.name} />
+                    <AvatarFallback>{voice.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                  </Avatar>
+                  <h3 className="font-semibold text-lg mb-2">{voice.name}</h3>
+                  <Badge variant="secondary" className="mb-4">{voice.type}</Badge>
+                  <Button 
+                    variant={selectedVoice === voice.id ? "default" : "outline"}
+                    className="w-full"
+                  >
+                    {selectedVoice === voice.id ? "Selected" : "Select"}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Upload Script Section */}
       <div ref={scriptSectionRef} className="mb-12 pt-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">Upload or paste your script</h2>
-            <p className="text-lg text-muted-foreground">
-              Your selected voice will speak this for you
-            </p>
-            {selectedVoiceData && (
-              <p className="text-primary font-medium">
-                Selected: {selectedVoiceData.name}
-              </p>
-            )}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-4">Upload or paste your script</h2>
+          <p className="text-lg text-muted-foreground">
+            {selectedVoice ? "Your selected voice will speak this for you" : 
+             uploadedVoice ? "Your uploaded voice will speak this for you" :
+             "Add your script to continue"}
+          </p>
+        </div>
+
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div>
+            <label className="block text-sm font-medium mb-2">Upload Script File</label>
+            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
+              <Upload className="w-8 h-8 mx-auto mb-4 text-muted-foreground" />
+              <Input
+                type="file"
+                accept=".txt,.docx"
+                onChange={handleFileUpload}
+                className="hidden"
+                id="script-upload"
+              />
+              <label htmlFor="script-upload" className="cursor-pointer">
+                <Button variant="outline" asChild>
+                  <span>Choose File (.txt, .docx)</span>
+                </Button>
+              </label>
+            </div>
           </div>
 
-          <div className="max-w-2xl mx-auto space-y-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">Upload Script File</label>
-              <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
-                <Upload className="w-8 h-8 mx-auto mb-4 text-muted-foreground" />
-                <Input
-                  type="file"
-                  accept=".txt,.docx"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                  id="script-upload"
-                />
-                <label htmlFor="script-upload" className="cursor-pointer">
-                  <Button variant="outline" asChild>
-                    <span>Choose File (.txt, .docx)</span>
-                  </Button>
-                </label>
-              </div>
-            </div>
+          <div className="text-center text-muted-foreground">or</div>
 
-            <div className="text-center text-muted-foreground">or</div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Paste your script</label>
+            <Textarea
+              placeholder="Type or paste your script here..."
+              value={script}
+              onChange={(e) => setScript(e.target.value)}
+              className="min-h-[200px]"
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Paste your script</label>
-              <Textarea
-                placeholder="Type or paste your script here..."
-                value={script}
-                onChange={(e) => setScript(e.target.value)}
-                className="min-h-[200px]"
-              />
-            </div>
-
+          <div className="max-w-2xl mx-auto">
             <Button 
-              onClick={handleSubmit} 
-              disabled={!script.trim() || isGenerating}
-              className="w-full h-12 text-lg"
+              size="lg" 
+              className="w-full text-lg py-6" 
+              onClick={handleSubmit}
+              disabled={(!selectedVoice && !uploadedVoice) || !script.trim()}
             >
-              {isGenerating ? "Generating..." : "Submit"}
+              Generate Voice Clone
             </Button>
           </div>
         </div>
+      </div>
 
       {/* Loading Animation */}
       {isGenerating && (

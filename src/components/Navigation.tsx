@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Shield, Mic, UserPlus } from "lucide-react";
+import { Home, Shield, Mic } from "lucide-react";
 
 const Navigation = () => {
   const location = useLocation();
@@ -8,18 +8,18 @@ const Navigation = () => {
   const navItems = [
     {
       path: "/",
-      label: "Voice Detection",
+      label: "Home",
+      icon: Home
+    },
+    {
+      path: "/detect-deepfake",
+      label: "Detect Deepfake",
       icon: Shield
     },
     {
       path: "/clone-voice", 
       label: "Clone Voice",
       icon: Mic
-    },
-    {
-      path: "/register-voice",
-      label: "Register Voice", 
-      icon: UserPlus
     }
   ];
 
@@ -28,7 +28,7 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="font-bold text-xl">
-            VoiceGuard
+            Vaani
           </Link>
           
           <div className="flex space-x-2">
