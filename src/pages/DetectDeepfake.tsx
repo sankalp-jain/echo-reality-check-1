@@ -12,6 +12,7 @@ const DetectDeepfake = () => {
   const [currentResult, setCurrentResult] = useState<DetectionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [uploadResponse, setUploadResponse] = useState<any>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [showRunTest, setShowRunTest] = useState(false);
   const sampleAudiosRef = useRef<HTMLDivElement>(null);
@@ -26,23 +27,55 @@ const DetectDeepfake = () => {
   };
 
   // Function to handle file upload
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setIsUploading(true);
       setUploadedFile(file);
       
-      // Simulate upload delay
-      setTimeout(() => {
-        setIsUploading(false);
+      try {
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Call the backend API
+        const response = await fetch('https://cleancommit-voice-clone.hf.space/upload-fake-audio', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        console.log('Upload successful:', result);
+        
+        // Validate the response
+        if (result.error) {
+          throw new Error(result.error);
+        }
+        
+        if (!result.file_path) {
+          throw new Error('No file path received from server');
+        }
+        
+        setUploadResponse(result);
         setShowRunTest(true);
-      }, 2000);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        // Show specific error message to user
+        const errorMessage = error instanceof Error ? error.message : 'Failed to upload file. Please try again.';
+        alert(`Upload failed: ${errorMessage}`);
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
   // Function to handle testing uploaded audio
   const handleTestUploadedAudio = async () => {
-    if (!uploadedFile) return;
+    if (!uploadedFile || !uploadResponse) return;
     
     setIsLoading(true);
     setCurrentResult(null);
@@ -53,11 +86,19 @@ const DetectDeepfake = () => {
     }
     
     try {
-      // Generate a random result for uploaded file
-      const result = await getDetectionResult(`uploaded_${uploadedFile.name}`);
+      // Use the filename from backend response for detection
+      const fileName = uploadResponse.filename;
+      if (!fileName) {
+        throw new Error('No filename available from upload response');
+      }
+      
+      // Call the detection API with the uploaded filename
+      const result = await getDetectionResult(fileName);
       setCurrentResult(result);
     } catch (error) {
       console.error("Error testing uploaded audio:", error);
+      // Show error to user
+      alert('Failed to analyze the uploaded audio. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -147,10 +188,19 @@ const DetectDeepfake = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-medium text-lg">Uploaded File</h3>
-                <p className="text-muted-foreground">{uploadedFile.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  Size: {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                <p className="text-muted-foreground">
+                  {uploadResponse?.filename || uploadedFile.name}
                 </p>
+                <p className="text-sm text-muted-foreground">
+                  Size: {uploadResponse?.file_size ? 
+                    (uploadResponse.file_size / 1024 / 1024).toFixed(2) : 
+                    (uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+                {uploadResponse?.file_path && (
+                  <p className="text-xs text-muted-foreground">
+                    Path: {uploadResponse.file_path}
+                  </p>
+                )}
               </div>
               {showRunTest && (
                 <Button size="lg" onClick={handleTestUploadedAudio}>
